@@ -73,6 +73,41 @@
     <button class="export-button" onclick="exportToPDF()">Export to PDF</button>
     
     <script>
+        const controlQuestions = [
+            { text: "I was NOT permitted to make my own decisions without approval.", values: [0, 1, 2, 3] },
+            { text: "My behavior was constantly being monitored.", values: [0, 1, 2, 3] },
+            { text: "I had freedom to decline participation in an activity without fear of negative consequences.", values: [3, 2, 1, 0] },
+            { text: "Obedience to the individual or group was required to avoid negative consequences.", values: [0, 1, 2, 3] },
+            { text: "I was permitted to question the teachings of the individual or group without fear of retaliation.", values: [3, 2, 1, 0] },
+            { text: "I was isolated from others outside the spiritual community or relationship.", values: [0, 1, 2, 3] }
+        ];
+        
+        const harmQuestions = [
+            { text: "I feel damaged by the experience.", values: [0, 1, 2, 3] },
+            { text: "I believe my personal spiritual needs were neglected.", values: [0, 1, 2, 3] },
+            { text: "I experienced negative physical symptoms due to my negative spiritual experience.", values: [0, 1, 2, 3] },
+            { text: "My spiritual needs were exploited in order for the individual(s) to maintain power and/or control.", values: [0, 1, 2, 3] },
+            { text: "I was blamed for causing trouble when I questioned the actions or beliefs of the individual(s) in power.", values: [0, 1, 2, 3] }
+        ];
+        
+        function loadQuestions() {
+            const controlTable = document.getElementById("controlTable");
+            controlQuestions.forEach((q, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${q.text}</td>
+                    ${q.values.map(value => `<td><input type='radio' name='qC${index}' value='${value}'></td>`).join('')}`;
+                controlTable.appendChild(row);
+            });
+            
+            const harmTable = document.getElementById("harmTable");
+            harmQuestions.forEach((q, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${q.text}</td>
+                    ${q.values.map(value => `<td><input type='radio' name='qH${index}' value='${value}'></td>`).join('')}`;
+                harmTable.appendChild(row);
+            });
+        }
+        
         function exportToPDF() {
             html2canvas(document.body).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
