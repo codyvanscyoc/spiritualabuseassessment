@@ -37,10 +37,10 @@
     <table>
         <tr>
             <th>Question</th>
-            <th>Strongly Disagree (0)</th>
-            <th>Disagree (1)</th>
-            <th>Agree (2)</th>
-            <th>Strongly Agree (3)</th>
+            <th>Strongly Disagree</th>
+            <th>Disagree</th>
+            <th>Agree</th>
+            <th>Strongly Agree</th>
         </tr>
     </table>
     
@@ -48,10 +48,10 @@
     <table>
         <tr>
             <th>Question</th>
-            <th>Strongly Disagree (0)</th>
-            <th>Disagree (1)</th>
-            <th>Agree (2)</th>
-            <th>Strongly Agree (3)</th>
+            <th>Strongly Disagree</th>
+            <th>Disagree</th>
+            <th>Agree</th>
+            <th>Strongly Agree</th>
         </tr>
     </table>
     
@@ -60,42 +60,36 @@
     
     <script>
         const controlQuestions = [
-            "I was NOT permitted to make my own decisions without approval.",
-            "My behavior was constantly being monitored.",
-            "I had freedom to decline participation in an activity without fear of negative consequences.",
-            "Obedience to the individual or group was required to avoid negative consequences.",
-            "I was permitted to question the teachings of the individual or group without fear of retaliation.",
-            "I was isolated from others outside the spiritual community or relationship."
+            { text: "I was NOT permitted to make my own decisions without approval.", values: [0, 1, 2, 3] },
+            { text: "My behavior was constantly being monitored.", values: [0, 1, 2, 3] },
+            { text: "I had freedom to decline participation in an activity without fear of negative consequences.", values: [3, 2, 1, 0] },
+            { text: "Obedience to the individual or group was required to avoid negative consequences.", values: [0, 1, 2, 3] },
+            { text: "I was permitted to question the teachings of the individual or group without fear of retaliation.", values: [3, 2, 1, 0] },
+            { text: "I was isolated from others outside the spiritual community or relationship.", values: [0, 1, 2, 3] }
         ];
         
         const harmQuestions = [
-            "I feel damaged by the experience.",
-            "I believe my personal spiritual needs were neglected.",
-            "I experienced negative physical symptoms due to my negative spiritual experience.",
-            "My spiritual needs were exploited in order for the individual(s) to maintain power and/or control.",
-            "I was blamed for causing trouble when I questioned the actions or beliefs of the individual(s) in power."
+            { text: "I feel damaged by the experience.", values: [0, 1, 2, 3] },
+            { text: "I believe my personal spiritual needs were neglected.", values: [0, 1, 2, 3] },
+            { text: "I experienced negative physical symptoms due to my negative spiritual experience.", values: [0, 1, 2, 3] },
+            { text: "My spiritual needs were exploited in order for the individual(s) to maintain power and/or control.", values: [0, 1, 2, 3] },
+            { text: "I was blamed for causing trouble when I questioned the actions or beliefs of the individual(s) in power.", values: [0, 1, 2, 3] }
         ];
         
         function loadQuestions() {
             const controlTable = document.querySelectorAll("table")[0];
             controlQuestions.forEach((q, index) => {
                 const row = document.createElement("tr");
-                row.innerHTML = `<td>${q}</td>
-                    <td><input type='radio' name='qC${index}' value='0'></td>
-                    <td><input type='radio' name='qC${index}' value='1'></td>
-                    <td><input type='radio' name='qC${index}' value='2'></td>
-                    <td><input type='radio' name='qC${index}' value='3'></td>`;
+                row.innerHTML = `<td>${q.text}</td>
+                    ${q.values.map((value, i) => `<td><input type='radio' name='qC${index}' value='${value}'></td>`).join('')}`;
                 controlTable.appendChild(row);
             });
             
             const harmTable = document.querySelectorAll("table")[1];
             harmQuestions.forEach((q, index) => {
                 const row = document.createElement("tr");
-                row.innerHTML = `<td>${q}</td>
-                    <td><input type='radio' name='qH${index}' value='0'></td>
-                    <td><input type='radio' name='qH${index}' value='1'></td>
-                    <td><input type='radio' name='qH${index}' value='2'></td>
-                    <td><input type='radio' name='qH${index}' value='3'></td>`;
+                row.innerHTML = `<td>${q.text}</td>
+                    ${q.values.map((value, i) => `<td><input type='radio' name='qH${index}' value='${value}'></td>`).join('')}`;
                 harmTable.appendChild(row);
             });
         }
