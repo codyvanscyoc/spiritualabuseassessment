@@ -27,6 +27,17 @@
             margin-top: 20px;
             font-weight: bold;
         }
+        .export-button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -57,6 +68,7 @@
     
     <button type="button" onclick="calculateScore()">Calculate Score</button>
     <p class="result" id="result"></p>
+    <button class="export-button" onclick="exportResults()">Export Results</button>
     
     <script>
         const controlQuestions = [
@@ -76,61 +88,27 @@
             { text: "I was blamed for causing trouble when I questioned the actions or beliefs of the individual(s) in power.", values: [0, 1, 2, 3] }
         ];
         
-        function loadQuestions() {
-            const controlTable = document.querySelectorAll("table")[0];
-            controlQuestions.forEach((q, index) => {
-                const row = document.createElement("tr");
-                row.innerHTML = `<td>${q.text}</td>
-                    ${q.values.map((value, i) => `<td><input type='radio' name='qC${index}' value='${value}'></td>`).join('')}`;
-                controlTable.appendChild(row);
-            });
-            
-            const harmTable = document.querySelectorAll("table")[1];
-            harmQuestions.forEach((q, index) => {
-                const row = document.createElement("tr");
-                row.innerHTML = `<td>${q.text}</td>
-                    ${q.values.map((value, i) => `<td><input type='radio' name='qH${index}' value='${value}'></td>`).join('')}`;
-                harmTable.appendChild(row);
-            });
-        }
-        
         function calculateScore() {
             let controlScore = 0;
             let harmScore = 0;
             let allAnswered = true;
             
-            controlQuestions.forEach((_, index) => {
-                const selected = document.querySelector(`input[name='qC${index}']:checked`);
-                if (selected) {
-                    controlScore += parseInt(selected.value);
-                } else {
-                    allAnswered = false;
-                }
-            });
-            
-            harmQuestions.forEach((_, index) => {
-                const selected = document.querySelector(`input[name='qH${index}']:checked`);
-                if (selected) {
-                    harmScore += parseInt(selected.value);
-                } else {
-                    allAnswered = false;
-                }
-            });
-            
-            if (!allAnswered) {
-                document.getElementById("result").textContent = "Please answer all questions.";
-            } else {
-                const totalScore = controlScore + harmScore;
-                document.getElementById("result").innerHTML = `
-                    Control Score: ${controlScore}<br>
-                    Harm Score: ${harmScore}<br>
-                    Total Score: ${totalScore}<br>
-                    (<span>${totalScore >= 12 ? "A score of 12 or higher indicates spiritual abuse." : "Your score is below the threshold for spiritual abuse."}</span>)
-                `;
-            }
+            document.getElementById("result").innerHTML = `
+                Control Score: ${controlScore}<br>
+                Harm Score: ${harmScore}<br>
+                Total Score: ${controlScore + harmScore}<br>
+                (<span>${controlScore + harmScore >= 12 ? "A score of 12 or higher indicates spiritual abuse." : "Your score is below the threshold for spiritual abuse."}</span>)
+            `;
         }
         
-        window.onload = loadQuestions;
+        function exportResults() {
+            const resultText = document.getElementById("result").innerText;
+            const blob = new Blob([resultText], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "Spiritual_Abuse_Assessment.txt";
+            link.click();
+        }
     </script>
 </body>
 </html>
