@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiritual Abuse Assessment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .question {
+            margin-bottom: 10px;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Spiritual Abuse Assessment</h2>
+    <form id="assessmentForm">
+        <div id="questions"></div>
+        <button type="button" onclick="calculateScore()">Calculate Score</button>
+    </form>
+    <p class="result" id="result"></p>
+    
+    <script>
+        const questions = [
+            "I was NOT permitted to make my own decisions without approval.",
+            "My behavior was constantly being monitored.",
+            "I had freedom to decline participation in an activity without fear of negative consequences.",
+            "Obedience to the individual or group was required to avoid negative consequences.",
+            "I was permitted to question the teachings of the individual or group without fear of retaliation.",
+            "I was isolated from others outside the spiritual community or relationship.",
+            "I feel damaged by the experience.",
+            "I believe my personal spiritual needs were neglected.",
+            "I experienced negative physical symptoms due to my negative spiritual experience.",
+            "My spiritual needs were exploited in order for the individual(s) to maintain power and/or control.",
+            "I was blamed for causing trouble when I questioned the actions or beliefs of the individual(s) in power."
+        ];
+        
+        function loadQuestions() {
+            const container = document.getElementById("questions");
+            questions.forEach((q, index) => {
+                const div = document.createElement("div");
+                div.className = "question";
+                div.innerHTML = `<p>${q}</p>
+                    <label><input type="radio" name="q${index}" value="0"> Strongly Disagree (0)</label>
+                    <label><input type="radio" name="q${index}" value="1"> Disagree (1)</label>
+                    <label><input type="radio" name="q${index}" value="2"> Agree (2)</label>
+                    <label><input type="radio" name="q${index}" value="3"> Strongly Agree (3)</label>`;
+                container.appendChild(div);
+            });
+        }
+        
+        function calculateScore() {
+            let totalScore = 0;
+            let allAnswered = true;
+            
+            questions.forEach((_, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected) {
+                    totalScore += parseInt(selected.value);
+                } else {
+                    allAnswered = false;
+                }
+            });
+            
+            if (!allAnswered) {
+                document.getElementById("result").textContent = "Please answer all questions.";
+            } else {
+                document.getElementById("result").textContent = `Total Score: ${totalScore}\n${totalScore >= 12 ? "A score of 12 or higher indicates spiritual abuse." : ""}`;
+            }
+        }
+        
+        window.onload = loadQuestions;
+    </script>
+</body>
+</html>
