@@ -8,9 +8,20 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            text-align: center;
         }
-        .question {
-            margin-bottom: 10px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
         }
         .result {
             margin-top: 20px;
@@ -20,8 +31,17 @@
 </head>
 <body>
     <h2>Spiritual Abuse Assessment</h2>
+    <p>For each statement, select the response that best reflects your experience. A total score of 12 or higher indicates spiritual abuse.</p>
     <form id="assessmentForm">
-        <div id="questions"></div>
+        <table>
+            <tr>
+                <th>Question</th>
+                <th>Strongly Disagree (0)</th>
+                <th>Disagree (1)</th>
+                <th>Agree (2)</th>
+                <th>Strongly Agree (3)</th>
+            </tr>
+        </table>
         <button type="button" onclick="calculateScore()">Calculate Score</button>
     </form>
     <p class="result" id="result"></p>
@@ -42,16 +62,15 @@
         ];
         
         function loadQuestions() {
-            const container = document.getElementById("questions");
+            const table = document.querySelector("table");
             questions.forEach((q, index) => {
-                const div = document.createElement("div");
-                div.className = "question";
-                div.innerHTML = `<p>${q}</p>
-                    <label><input type="radio" name="q${index}" value="0"> Strongly Disagree (0)</label>
-                    <label><input type="radio" name="q${index}" value="1"> Disagree (1)</label>
-                    <label><input type="radio" name="q${index}" value="2"> Agree (2)</label>
-                    <label><input type="radio" name="q${index}" value="3"> Strongly Agree (3)</label>`;
-                container.appendChild(div);
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${q}</td>
+                    <td><input type="radio" name="q${index}" value="0"></td>
+                    <td><input type="radio" name="q${index}" value="1"></td>
+                    <td><input type="radio" name="q${index}" value="2"></td>
+                    <td><input type="radio" name="q${index}" value="3"></td>`;
+                table.appendChild(row);
             });
         }
         
@@ -71,7 +90,7 @@
             if (!allAnswered) {
                 document.getElementById("result").textContent = "Please answer all questions.";
             } else {
-                document.getElementById("result").textContent = `Total Score: ${totalScore}\n${totalScore >= 12 ? "A score of 12 or higher indicates spiritual abuse." : ""}`;
+                document.getElementById("result").textContent = `Total Score: ${totalScore}\n${totalScore >= 12 ? "A score of 12 or higher indicates spiritual abuse." : "Your score is below the threshold for spiritual abuse."}`;
             }
         }
         
