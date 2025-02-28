@@ -32,14 +32,26 @@
 <body>
     <h2>Spiritual Abuse Assessment</h2>
     <p>For each statement, select the response that best reflects your experience. A total score of 12 or higher indicates spiritual abuse.</p>
+    
+    <h3>Control Section</h3>
     <form id="assessmentForm">
         <table>
             <tr>
                 <th>Question</th>
-                <th>Strongly Disagree (0)</th>
-                <th>Disagree (1)</th>
-                <th>Agree (2)</th>
-                <th>Strongly Agree (3)</th>
+                <th>Strongly Disagree</th>
+                <th>Disagree</th>
+                <th>Agree</th>
+                <th>Strongly Agree</th>
+            </tr>
+        </table>
+        <h3>Harm Section</h3>
+        <table>
+            <tr>
+                <th>Question</th>
+                <th>Strongly Disagree</th>
+                <th>Disagree</th>
+                <th>Agree</th>
+                <th>Strongly Agree</th>
             </tr>
         </table>
         <button type="button" onclick="calculateScore()">Calculate Score</button>
@@ -47,41 +59,59 @@
     <p class="result" id="result"></p>
     
     <script>
-        const questions = [
-            "I was NOT permitted to make my own decisions without approval.",
-            "My behavior was constantly being monitored.",
-            "I had freedom to decline participation in an activity without fear of negative consequences.",
-            "Obedience to the individual or group was required to avoid negative consequences.",
-            "I was permitted to question the teachings of the individual or group without fear of retaliation.",
-            "I was isolated from others outside the spiritual community or relationship.",
-            "I feel damaged by the experience.",
-            "I believe my personal spiritual needs were neglected.",
-            "I experienced negative physical symptoms due to my negative spiritual experience.",
-            "My spiritual needs were exploited in order for the individual(s) to maintain power and/or control.",
-            "I was blamed for causing trouble when I questioned the actions or beliefs of the individual(s) in power."
+        const controlQuestions = [
+            { text: "I was NOT permitted to make my own decisions without approval.", values: [0, 1, 2, 3] },
+            { text: "My behavior was constantly being monitored.", values: [0, 1, 2, 3] },
+            { text: "I had freedom to decline participation in an activity without fear of negative consequences.", values: [3, 2, 1, 0] },
+            { text: "Obedience to the individual or group was required to avoid negative consequences.", values: [0, 1, 2, 3] },
+            { text: "I was permitted to question the teachings of the individual or group without fear of retaliation.", values: [3, 2, 1, 0] },
+            { text: "I was isolated from others outside the spiritual community or relationship.", values: [0, 1, 2, 3] }
+        ];
+        
+        const harmQuestions = [
+            { text: "I feel damaged by the experience.", values: [0, 1, 2, 3] },
+            { text: "I believe my personal spiritual needs were neglected.", values: [0, 1, 2, 3] },
+            { text: "I experienced negative physical symptoms due to my negative spiritual experience.", values: [0, 1, 2, 3] },
+            { text: "My spiritual needs were exploited in order for the individual(s) to maintain power and/or control.", values: [0, 1, 2, 3] },
+            { text: "I was blamed for causing trouble when I questioned the actions or beliefs of the individual(s) in power.", values: [0, 1, 2, 3] }
         ];
         
         function loadQuestions() {
-            const table = document.querySelector("table");
-            questions.forEach((q, index) => {
+            const controlTable = document.querySelector("h3 + table");
+            controlQuestions.forEach((q, index) => {
                 const row = document.createElement("tr");
-                row.innerHTML = `<td>${q}</td>
-                    <td><input type="radio" name="q${index}" value="0"></td>
-                    <td><input type="radio" name="q${index}" value="1"></td>
-                    <td><input type="radio" name="q${index}" value="2"></td>
-                    <td><input type="radio" name="q${index}" value="3"></td>`;
-                table.appendChild(row);
+                row.innerHTML = `<td>${q.text}</td>
+                    ${q.values.map((value, i) => `<td><input type='radio' name='qC${index}' value='${value}'></td>`).join('')}`;
+                controlTable.appendChild(row);
+            });
+            
+            const harmTable = document.querySelector("h3 + table + h3 + table");
+            harmQuestions.forEach((q, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${q.text}</td>
+                    ${q.values.map((value, i) => `<td><input type='radio' name='qH${index}' value='${value}'></td>`).join('')}`;
+                harmTable.appendChild(row);
             });
         }
         
         function calculateScore() {
-            let totalScore = 0;
+            let controlScore = 0;
+            let harmScore = 0;
             let allAnswered = true;
             
-            questions.forEach((_, index) => {
-                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            controlQuestions.forEach((_, index) => {
+                const selected = document.querySelector(`input[name='qC${index}']:checked`);
                 if (selected) {
-                    totalScore += parseInt(selected.value);
+                    controlScore += parseInt(selected.value);
+                } else {
+                    allAnswered = false;
+                }
+            });
+            
+            harmQuestions.forEach((_, index) => {
+                const selected = document.querySelector(`input[name='qH${index}']:checked`);
+                if (selected) {
+                    harmScore += parseInt(selected.value);
                 } else {
                     allAnswered = false;
                 }
@@ -90,7 +120,8 @@
             if (!allAnswered) {
                 document.getElementById("result").textContent = "Please answer all questions.";
             } else {
-                document.getElementById("result").textContent = `Total Score: ${totalScore}\n${totalScore >= 12 ? "A score of 12 or higher indicates spiritual abuse." : "Your score is below the threshold for spiritual abuse."}`;
+                const totalScore = controlScore + harmScore;
+                document.getElementById("result").textContent = `Control Score: ${controlScore}\nHarm Score: ${harmScore}\nTotal Score: ${totalScore}\n${totalScore >= 12 ? "A score of 12 or higher indicates spiritual abuse." : "Your score is below the threshold for spiritual abuse."}`;
             }
         }
         
